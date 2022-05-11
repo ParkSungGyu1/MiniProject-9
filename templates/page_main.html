@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<script>
+    function search_youtube(){
+        let input = $("#search").val()
+        $.ajax({
+            type: "POST",
+            url: "/video_list",
+            data: {search_give: input},
+            success: function (response) {
+                console.log(response)
+            }
+        })
+    }
+
+</script>
+<body>
+    <input id="search" placeholder="데이터 입력">
+    <button onclick="search_youtube()">유튜브 api</button>
+</body>
+</html>
