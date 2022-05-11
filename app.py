@@ -48,6 +48,15 @@ db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
 
+@app.route('/video_list', methods=['POST'])
+def get_video_list():
+  developer_key = "AIzaSyC-Fl9ZYqK1t98RqKb1xWQ4AtGLnLrz9CI"
+  query = request.form['search_give']
+  youtube = build_youtube_search(developer_key)
+  search_response = get_search_response(youtube, query)
+  res = json.dumps(get_video_info(search_response), ensure_ascii=False)
+  return Response(res, content_type='application/json; charset=utf-8')
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -106,14 +115,29 @@ def bucket_done():
     db.users.insert_one(doc)
     return jsonify({'msg': 'POST(완료) 연결 완료!'})
 
-@app.route('/video_list', methods=['POST'])
-def get_video_list():
-  developer_key = "AIzaSyC-Fl9ZYqK1t98RqKb1xWQ4AtGLnLrz9CI"
-  query = request.form['search_give']
-  youtube = build_youtube_search(developer_key)
-  search_response = get_search_response(youtube, query)
-  res = json.dumps(get_video_info(search_response), ensure_ascii=False)
-  return Response(res, content_type='application/json; charset=utf-8')
+
+
+@app.route("/info", methods=["POST"])
+def info_post():
+    url_receive = request.form['url_give']
+    name_receive = request.form['name_give']
+    description_receive = request.form['description_give']
+
+    doc = {
+        'url': url_receive,
+        'title': name_receive,
+        'description': description_receive,
+    }
+    db.nullforyou.insert_one(doc)
+    return jsonify({'msg': '기록 완료!'})
+
+
+@app.route("/info", methods=["GET"])
+def info_get():
+    info_list = list(db.nullforyou.find({}, {'_id': False}))
+    return jsonify({'infos':info_list})
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

@@ -2,26 +2,208 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <title>NULL 위한 정보</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .title {
+            width: 100%;
+            height: 250px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://t1.daumcdn.net/cfile/tistory/215B644D56DCF5E82C');
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title > button {
+            width: 200px;
+            height: 50px;
+
+            background-color: transparent;
+            color: white;
+
+            border-radius: 50px;
+            border: 1px solid white;
+
+            margin-top: 10px;
+        }
+
+        .mytitle > button:hover {
+            border: 2px solid white;
+        }
+
+        .input-group {
+            position: absolute;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+            display: none;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns > button {
+            margin-right: 10px;
+        }
+        .mycards {
+            margin: 20px;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: '/info',
+                data: {},
+                success: function (response) {
+                    let rows = response['infos']
+                    for (let i = 0; i < rows.length; i++){
+                        let url = rows[i]['url']
+                        let name = rows[i]['title']
+                        let description = rows[i]['description']
+
+                        let temp_html = `<div class="col">
+                                            <div class="card">
+                                                <img src="${url}" class="card-img-top" alt="...">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${name}</h5>
+                                                    <p class="card-text">${description}</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+        }
+        function posting() {
+            let url = $('#url').val()
+            let description = $('#description').val()
+            let name = $('#name').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/info',
+                data: {url_give: url, description_give: description, name_give: name},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+
+        function open_box() {
+            $('#post-box').show()
+        }
+
+        function close_box() {
+            $('#post-box').hide()
+        }
+    </script>
 </head>
 
-<script>
-    function search_youtube(){
-        let input = $("#search").val()
-        $.ajax({
-            type: "POST",
-            url: "/video_list",
-            data: {search_give: input},
-            success: function (response) {
-                console.log(response)
-            }
-        })
-    }
-
-</script>
 <body>
-    <input id="search" placeholder="데이터 입력">
-    <button onclick="search_youtube()">유튜브 api</button>
+<div class="title">
+    <h1>NULL 위한 정보</h1>
+    <button onclick="open_box()">정보 기록하기</button>
+</div>
+
+<div class="mypost" id="post-box">
+    <div class="form-floating mb-3">
+        <input id="url" type="email" class="form-control" placeholder="name@example.com">
+        <label>이미지URL</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input id="name" type="email" class="form-control" placeholder="name@example.com">
+        <label>제목</label>
+    </div>
+    <div class="form-floating">
+        <textarea id="description" class="form-control" placeholder="Leave a name here"></textarea>
+        <label for="floatingTextarea2">내용</label>
+    </div>
+
+    <div class="mybtns">
+        <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+</div>
+<div class="input-group">
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="frontend_checkbox" value="front">
+        <label style="cursor:pointer" class="form-check-label" for="frontend_checkbox">HTML/CSS</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="backend_checkbox" value="back">
+        <label style="cursor:pointer" class="form-check-label" for="backend_checkbox">Python</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="etc_checkbox" value="etc">
+        <label style="cursor:pointer" class="form-check-label" for="etc_checkbox">React</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="etc_checkbox" value="etc">
+        <label style="cursor:pointer" class="form-check-label" for="etc_checkbox">Node.js</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="etc_checkbox" value="etc">
+        <label style="cursor:pointer" class="form-check-label" for="etc_checkbox">Spring</label>
+    </div>
+</div>
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-2 g-4" id="cards-box">
+    </div>
+</div>
+
+
 </body>
 </html>
