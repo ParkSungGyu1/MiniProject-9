@@ -1,0 +1,76 @@
+* {
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+body {
+    background-color: rgb(232, 249, 253);
+    min-height: 100vh;
+}
+
+.mybox {
+    width: 95%;
+    max-width: 700px;
+    padding: 30px 10px 30px 60px;
+    box-shadow: 0px 0px 5px 0px #0AA1DD;
+    margin: 30px auto;
+
+}
+
+.title {
+    font-weight: 800;
+    font-size: 50px;
+    font-family: 'Gamja Flower', cursive;
+}
+
+.section {
+    padding: 1rem 1.5rem;
+    max-width: 750px;
+    margin: auto;
+}
+
+.subtitle {
+    font-size: 2rem;
+    font-family: 'Stylish', sans-serif;
+}
+
+.mybox > h3{
+    text-align: center;
+    margin-right: 50px;
+}
+.signup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.signup2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 10px;
+
+}
+
+.signup > input {
+    margin: 10px;
+    width: 70%;
+}
+.signup > input:focus {
+    outline: none;
+}
+
+.is-mycolor {
+    color: #0AA1DD !important;
+}
+
+.labels{
+    margin-left: 15px;
+    margin-top: 5px;
+}
+
+.alert-label{
+    margin-left: 15px;
+    margin-bottom: 3px;
+    color: tomato;
+}

@@ -1,5 +1,5 @@
 import hashlib
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, jsonify, request, Response, redirect, url_for
 from pymongo import MongoClient
 import json
 import jwt
@@ -60,7 +60,16 @@ def get_video_list():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id": payload["id"]})
+        return render_template('page_main.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
 
 @app.route('/main')
 def main_page():
@@ -69,6 +78,10 @@ def main_page():
 @app.route('/signup')
 def login_page():
     return render_template('signup.html')
+
+@app.route('/login')
+def login():
+    return render_template('index.html')
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -131,6 +144,7 @@ def info_post():
     return jsonify({'msg': '기록 완료!'})
 
 
+
 @app.route("/info", methods=["GET"])
 def info_get():
     info_list = list(db.nullforyou.find({}, {'_id': False}))
@@ -145,6 +159,11 @@ def boxcheck():
         return jsonify({'msg': info_list})
     else:
         return jsonify({'msg': result})
+
+@app.route("/detail/<keyword>")
+def detail(keyword):
+    info_list = list(db.nullforyou.find({'title':keyword}, {'_id': False}))
+    return render_template("detail.html", title = keyword, desc = info_list[0]["description"], url = info_list[0]["url"])
 
 
 if __name__ == '__main__':
