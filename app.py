@@ -1,48 +1,11 @@
 import hashlib
 import time
 
-from flask import Flask, render_template, jsonify, request, Response, redirect, url_for
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
-import json
 import jwt
 from datetime import datetime, timedelta
 import certifi
-from bson.json_util import dumps
-from googleapiclient.discovery import build
-
-
-def build_youtube_search(developer_key):
-  DEVELOPER_KEY = developer_key
-  YOUTUBE_API_SERVICE_NAME="youtube"
-  YOUTUBE_API_VERSION="v3"
-  return build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=DEVELOPER_KEY)
-
-def get_search_response(youtube, query):
-  search_response = youtube.search().list(
-    q = query,
-    order = "relevance",
-    part = "snippet",
-    maxResults = 10
-    ).execute()
-  return search_response
-
-def get_video_info(search_response):
-  result_json = {}
-  idx =0
-  for item in search_response['items']:
-    if item['id']['kind'] == 'youtube#video':
-      result_json[idx] = info_to_dict(item['id']['videoId'], item['snippet']['title'], item['snippet']['description'], item['snippet']['thumbnails']['medium']['url'])
-      idx += 1
-  return result_json
-
-def info_to_dict(videoId, title, description, url):
-  result = {
-      "videoId": videoId,
-      "title": title,
-      "description": description,
-      "url": url
-  }
-  return result
 
 app = Flask(__name__)
 ca = certifi.where()
@@ -51,14 +14,6 @@ db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
 
-@app.route('/video_list', methods=['POST'])
-def get_video_list():
-  developer_key = "AIzaSyC-Fl9ZYqK1t98RqKb1xWQ4AtGLnLrz9CI"
-  query = request.form['search_give']
-  youtube = build_youtube_search(developer_key)
-  search_response = get_search_response(youtube, query)
-  res = json.dumps(get_video_info(search_response), ensure_ascii=False)
-  return Response(res, content_type='application/json; charset=utf-8')
 
 @app.route('/')
 def home():
