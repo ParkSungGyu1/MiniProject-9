@@ -5,6 +5,7 @@ import json
 import jwt
 from datetime import datetime, timedelta
 import certifi
+from bson.json_util import dumps
 from googleapiclient.discovery import build
 
 
@@ -78,8 +79,6 @@ def sign_in():
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     result = db.users.find_one({'id': username_receive, 'password': pw_hash})
 
-    print(result)
-
     if result is not None:
         payload = {
             'id': username_receive,
@@ -137,7 +136,12 @@ def info_get():
     info_list = list(db.nullforyou.find({}, {'_id': False}))
     return jsonify({'infos':info_list})
 
-
+@app.route("/boxcheck", methods=["POST"])
+def boxcheck():
+    checkval_receive = request.form['check_val']
+    result = list(db.nullforyou.find({'title': {"$regex": checkval_receive}} , {'_id': False}))
+    print(result)
+    return jsonify({'msg': result})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
