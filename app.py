@@ -1,4 +1,6 @@
 import hashlib
+import time
+
 from flask import Flask, render_template, jsonify, request, Response, redirect, url_for
 from pymongo import MongoClient
 import json
@@ -162,7 +164,8 @@ def boxcheck():
 
 @app.route("/detail/<keyword>")
 def detail(keyword):
-    info_list = list(db.nullforyou.find({'title':keyword}, {'_id': False}))
+    info_list = list(db.nullforyou.find({'title':{"$regex": keyword[0:10]}}, {'_id': False}))
+    print(info_list)
     return render_template("detail.html", title = keyword, desc = info_list[0]["description"], url = info_list[0]["url"])
 
 
