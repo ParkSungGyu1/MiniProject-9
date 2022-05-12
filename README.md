@@ -12,7 +12,7 @@ Null위한 정보 (9조 미니 프로젝트)
 
 📺시연영상
 ----------
-
+https://youtu.be/G3FS9qookyY
 <br>
 
 
