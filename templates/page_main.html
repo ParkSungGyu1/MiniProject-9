@@ -101,14 +101,16 @@
         function checking(event) {
             let check_val = event.target.value
             if(event.target.checked){
+
                 $("#cards-box").empty()
                 $.ajax({
                 type: "POST",
                 url: "/boxcheck",
                 data: {check_val:check_val},
                 success: (response) => {
+                    console.log(response)
                     let rows = response["msg"]
-                    for (let i = 0; i < rows.length; i++) {
+                    for (let i = 0; i < rows.length; i++){
                         let url = rows[i]['url']
                         let name = rows[i]['title']
                         let description = rows[i]['description']
@@ -137,7 +139,8 @@
                 url: '/info',
                 data: {},
                 success: function (response) {
-                    let rows = response['infos']
+
+                    let rows = response['msg']
                     for (let i = 0; i < rows.length; i++){
                         let url = rows[i]['url']
                         let name = rows[i]['title']
@@ -213,24 +216,29 @@
 </div>
 <div class="check-box">
     <div class="form-check form-check-inline">
-        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="html_checkbox" onclick="checking(event)" value="HTML">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="html_checkbox" onclick="checking(event)" value="HTML">
         <label style="cursor:pointer" class="form-check-label" for="html_checkbox">HTML/CSS</label>
     </div>
     <div class="form-check form-check-inline">
-        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="python_checkbox" onclick="checking(event)" value="파이썬">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="python_checkbox" onclick="checking(event)" value="파이썬">
         <label style="cursor:pointer" class="form-check-label" for="python_checkbox">Python</label>
     </div>
     <div class="form-check form-check-inline">
-        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="react_checkbox" onclick="checking(event)" value="리액트">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="react_checkbox" onclick="checking(event)" value="리액트">
         <label style="cursor:pointer" class="form-check-label" for="react_checkbox">React</label>
     </div>
     <div class="form-check form-check-inline">
-        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="node_checkbox" onclick="checking(event)" value="노드js">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="node_checkbox" onclick="checking(event)" value="js">
         <label style="cursor:pointer" class="form-check-label" for="node_checkbox">Node.js</label>
     </div>
     <div class="form-check form-check-inline">
-        <input style="cursor:pointer" class="form-check-input" type="checkbox" id="spring_checkbox" onclick="checking(event)" value="스프링">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="spring_checkbox" onclick="checking(event)" value="스프링">
         <label style="cursor:pointer" class="form-check-label" for="spring_checkbox">Spring</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input style="cursor:pointer" class="form-check-input" type="radio" name="check" id="all_checkbox" onclick="checking(event)" value="all">
+        <label style="cursor:pointer" class="form-check-label" for="all_checkbox">전체보기</label>
     </div>
 </div>
 <div class="mycards">
